@@ -25,6 +25,16 @@ const eventStore = new EventStore();
 
 app.get("/", async (req, res) => {
   const logs = await eventStore.getEvents()
+  logs.forEach(log => {
+    if (log.data) {
+      if (log.data.password) {
+        delete log.data.password
+      }
+      if (log.data.userToken) {
+        delete log.data.userToken
+      }
+    }
+  });
   res.json({ message: "Server is running", logs })
 })
 
