@@ -59,7 +59,8 @@ const userEvents = {
     await eventStore.createEvent(event);
   },
   async profileUpdateAttempt(data, ip, error = null) {
-    const event = new AppEvent("user", "", "log", "Profile Update Attempt", data, ip, error)
+    const { id } = data;
+    const event = new AppEvent("user", id, "log", "Profile Update Attempt", data, ip, error)
     await eventStore.createEvent(event);
   },
   async profileUpdated(data, ip, error = null) {
@@ -68,7 +69,8 @@ const userEvents = {
     await eventStore.createEvent(event);
   },
   async profileUpdateFailed(data, ip, error = null) {
-    const event = new AppEvent("user", "", "update", "Profile Update Failed", data, ip, error)
+    const { id } = data;
+    const event = new AppEvent("user", id, "update", "Profile Update Failed", data, ip, error)
     await eventStore.createEvent(event);
   },
 }
