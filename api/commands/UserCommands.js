@@ -42,7 +42,7 @@ const userCommands = {
   async updateUser(data) {
     // console.log({ data });
     try {
-      return dataStore.update('user', data)
+      return await dataStore.update('user', data)
     } catch (error) {
       return { data, error };
     }
