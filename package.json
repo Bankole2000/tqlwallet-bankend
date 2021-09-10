@@ -1,0 +1,25 @@
+{
+  "name": "wallet-backend",
+  "version": "1.0.0",
+  "description": "\"Group projec for TalentQL program\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "author": "Bankole Esan",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^2.30.2",
+    "async-redis": "^2.0.0",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "prisma": "^2.30.2"
+  }
+}

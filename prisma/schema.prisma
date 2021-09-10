@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+model User {
+  id        String    @unique @default(uuid()) @db.Uuid
+  email     String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  gender    String?   @db.VarChar(255)
+  firstname String?   @db.VarChar(255)
+  lastname  String?   @db.VarChar(255)
+  country   String?   @db.VarChar(255)
+  state     String?   @db.VarChar(255)
+  city      String?   @db.VarChar(255)
+  address   String?   @db.VarChar(255)
+  zipCode   String?   @db.VarChar(255)
+  bvn       String?   @db.VarChar(255)
+  bank      String?   @db.VarChar(255)
+  status    String?   @default("SIGNEDUP") @db.VarChar(255)
+  accountNo String?   @db.VarChar(255)
+  balance   Decimal?  @default(0.00) @db.Decimal(10, 2)
+  lastLogin DateTime? @default(now()) @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt
+}
+
+model Transaction {
+  id          String   @unique @default(uuid()) @db.Uuid
+  amount      Int
+  actorUuid   String   @db.VarChar(255)
+  type        String?  @db.VarChar(255)
+  description String?  @default("New Transaction") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+}
+
+// model AppEvent {
+//   id        Int      @id @default(autoincrement())
+//   model     String   @db.VarChar(255)
+//   modelId   String   @db.VarChar(255)
+//   action    String   @db.VarChar(10)
+//   name      String   @db.VarChar(255)
+//   data      Json     @db.Json
+//   createdAt DateTime @default(now()) @db.Timestamptz(6)
+// }
