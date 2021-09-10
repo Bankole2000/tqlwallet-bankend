@@ -14,6 +14,15 @@ class DataStore {
       return { data: null, error }
     }
   }
+  async createMany(model, data) {
+    try {
+      const created = await prisma[model].createMany({ data });
+      return { data: created, error: null };
+    } catch (error) {
+      console.log({ error });
+      return { data: null, error };
+    }
+  }
   async update(model, data) {
     try {
       const { id } = data;

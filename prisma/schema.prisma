@@ -42,6 +42,18 @@ model Transaction {
   createdAt   DateTime @default(now()) @db.Timestamptz(6)
 }
 
+model Event {
+  eventId   String   @id @unique
+  model     String?  @db.VarChar(255)
+  id        String?
+  type      String?
+  name      String?
+  data      Json?    @db.Json
+  error     String?
+  ip        String?
+  timestamp DateTime
+}
+
 // model AppEvent {
 //   id        Int      @id @default(autoincrement())
 //   model     String   @db.VarChar(255)

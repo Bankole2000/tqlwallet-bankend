@@ -1,10 +1,7 @@
 
-const DataStore = require('../data/dataStore');
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient()
-
-const dataStore = new DataStore()
 
 const txnCommands = {
   async createTxn(data) {
@@ -31,11 +28,6 @@ const txnCommands = {
       return { data, error: "Insufficient Balance" };
     }
   },
-  // updateUser(data) {
-  //   dataStore.update('user', data).then(data => {
-  //     console.log({ data });
-  //   })
-  // }
 }
 
 module.exports = txnCommands

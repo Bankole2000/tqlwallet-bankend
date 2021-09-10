@@ -1,3 +1,4 @@
+
 const EventStore = require('../data/eventStore');
 const AppEvent = require('./AppEvent');
 const eventStore = new EventStore();
@@ -73,6 +74,8 @@ const userEvents = {
     const event = new AppEvent("user", id, "update", "Profile Update Failed", data, ip, error)
     await eventStore.createEvent(event);
   },
+
+
 }
 
 module.exports = userEvents

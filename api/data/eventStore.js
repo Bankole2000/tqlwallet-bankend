@@ -35,6 +35,16 @@ class EventStore {
       console.log({ e });
     }
   }
+
+  async setEvents(data) {
+    try {
+      await redisClient.set('events', JSON.stringify(data));
+      return { data, error: null }
+    } catch (error) {
+      console.log({ error });
+      return { data: null, error }
+    }
+  }
 }
 
 module.exports = EventStore
