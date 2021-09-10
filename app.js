@@ -115,12 +115,12 @@ app.post("/update-profile", requireUserAuth, async (req, res) => {
   await events.userEvents.profileUpdateAttempt(updateData, ip);
   const { data, error } = await commands.userCommands.updateUser(updateData);
   // console.log(data, error);
-  if (error) {
-    await events.userEvents.profileUpdateFailed(updateData, ip, error);
-    res.status(400).json({ message: "profile update failed", data, error })
-  } else {
+  if (!error) {
     await events.userEvents.profileUpdated(updateData, ip, error);
     res.status(201).json({ message: "Profile Update success", data, error })
+  } else {
+    await events.userEvents.profileUpdateFailed(updateData, ip, error);
+    res.status(400).json({ message: "profile update failed", data, error })
   }
 })
 
