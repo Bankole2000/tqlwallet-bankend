@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 
 const txnQueries = {
   async getAllTxns() {
-    return dataStore.getAll('transaction')
+    return await dataStore.getAll('transaction')
   },
   async getUserTxns(data) {
     try {
       const userTxns = await prisma.transaction.findMany({
-        where: { actorUuid: data }, 
+        where: { actorUuid: data },
         orderBy: {
           createdAt: 'desc'
         }

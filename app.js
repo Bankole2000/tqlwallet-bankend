@@ -32,21 +32,52 @@ app.post("/login", async (req, res) => {
   const ip = req.headers['x-forwarded-for'] ||
     req.socket.remoteAddress ||
     null;
-  events.userEvents.loginAttempt(req.body, ip);
+  await events.userEvents.loginAttempt(req.body, ip);
   const { email, password } = req.body;
   const { data, error } = await commands.userCommands.authenticateUser('email', email, password);
   if (!error) {
-    events.userEvents.loginSuccess(data, ip);
+    await events.userEvents.loginSuccess(data, ip);
     return res.json({ message: "login successful", error, data })
   } else {
-    events.userEvents.loginFailed(req.body, ip);
+    await events.userEvents.loginFailed(req.body, ip);
     return res.json({ message: "Invalid Credentials", error, data: null })
   }
 })
 
 app.get("/activity", requireUserAuth, checkUserVerification, async (req, res) => {
-  const logs = await eventStore.getEvents()
-  const userActivity = logs.filter(log => log.id == req.user.id || log.data?.actorUuid == req.user.id)
+
+  // console.log({ query: req.query })
+  let logs = []
+  try {
+    logs = await eventStore.getEvents()
+  } catch (error) {
+    console.log({ error });
+  }
+  // console.log({ logs: logs.length });
+  let userActivity = [];
+  if (logs.length) {
+    userActivity = logs.filter(log => log.id == req.user.id || log.data?.actorUuid == req.user.id)
+    userActivity = userActivity.sort((a, b) => {
+      return Date.parse(a.timestamp) - Date.parse(b.timestamp)
+    })
+    userActivity.forEach((activity) => {
+      if (activity.data) {
+        delete activity.data.password
+        delete activity.data.userToken
+      }
+    })
+
+    if (req.query.from) {
+      const from = req.query.from;
+      userActivity = userActivity.filter((activity) => Date.parse(activity.timestamp) >= Date.parse(from))
+      if (req.query.to) {
+        const to = req.query.to;
+        userActivity = userActivity.filter((activity) => Date.parse(activity.timestamp) <= Date.parse(to))
+      }
+    }
+
+  }
+  // console.log({ userActivity: userActivity.length });
   res.status(200).json({ message: "User Activity", data: userActivity, error: null })
 })
 
@@ -81,14 +112,14 @@ app.post("/update-profile", requireUserAuth, async (req, res) => {
     req.socket.remoteAddress ||
     null;
   updateData = { ...req.body, id: req.user.id };
-  events.userEvents.profileUpdateAttempt(updateData, ip);
+  await events.userEvents.profileUpdateAttempt(updateData, ip);
   const { data, error } = await commands.userCommands.updateUser(updateData);
   // console.log(data, error);
   if (error) {
-    events.userEvents.profileUpdateFailed(updateData, ip, error);
+    await events.userEvents.profileUpdateFailed(updateData, ip, error);
     res.status(400).json({ message: "profile update failed", data, error })
   } else {
-    events.userEvents.profileUpdated(updateData, ip, error);
+    await events.userEvents.profileUpdated(updateData, ip, error);
     res.status(201).json({ message: "Profile Update success", data, error })
   }
 })
@@ -101,7 +132,7 @@ app.post("/transactions", requireUserAuth, checkUserVerification, async (req, re
   txnData.amount = Number(txnData.amount);
   txnData.type = Number(txnData.amount) < 0 ? "Debit" : "Credit";
   txnData.actorUuid = req.user.id;
-  events.txnEvents.txnAttempt(txnData, ip);
+  await events.txnEvents.txnAttempt(txnData, ip);
   // console.log({ txnData });
   const { data, error } = await commands.txnCommands.createTxn(txnData);
   // console.log({ data, error });
@@ -110,14 +141,14 @@ app.post("/transactions", requireUserAuth, checkUserVerification, async (req, re
     await events.txnEvents.txnCreated(data, ip, error)
     return res.status(201).json({ message: "New Transaction Successful", data, error })
   } else {
-    events.txnEvents.txnFailed(data, ip, error);
+    await events.txnEvents.txnFailed(data, ip, error);
     res.status(400).json({ message: "Transaction failed", data, error: error })
   }
 })
 
 app.get("/transactions", requireUserAuth, checkUserVerification, async (req, res) => {
   const userId = req.user.id
-  console.log({ userId });
+  // console.log({ userId });
   const { data, error } = await queries.txnQueries.getUserTxns(userId)
   if (!error) {
     res.status(200).json({ message: "User Transactions", data, error })

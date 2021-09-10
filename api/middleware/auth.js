@@ -45,15 +45,15 @@ const checkUserVerification = async (req, res, next) => {
   const ip = req.headers['x-forwarded-for'] ||
     req.socket.remoteAddress ||
     null;
-  events.userEvents.verifyAttempt(req.user, ip);
+  await events.userEvents.verifyAttempt(req.user, ip);
   try {
     if (req.user) {
       let user = req.user
       if (!user.gender || !user.firstname || !user.lastname || !user.country || !user.state || !user.city || !user.address || !user.bvn || !user.bank || !user.accountNo) {
-        events.userEvents.verifyFailed(user, ip, "Incomplete Profile")
+        await events.userEvents.verifyFailed(user, ip, "Incomplete Profile")
         res.status(403).json({ message: "Unverified", error: "Unverified - Incomplete Profile", data: user });
       } else {
-        events.userEvents.verifySuccess(user, ip);
+        await events.userEvents.verifySuccess(user, ip);
         next();
       }
     } else {
