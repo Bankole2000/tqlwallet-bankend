@@ -1,6 +1,8 @@
+const pdf = require('html-pdf');
 const queries = require('../queries');
 const commands = require("../commands");
 const events = require("../events");
+const statementTemplate = require('../services/templates/statementTemplate');
 
 module.exports.getTransactions = async (req, res) => {
   const userId = req.user.id
@@ -48,4 +50,24 @@ module.exports.getBankStatement = async (req, res) => {
     console.log({ data, error });
     res.status(500).json({ message: "There was an error", data, error })
   }
+}
+
+module.exports.generateStatementPDF = async (req, res) => {
+  const { user } = req;
+  const statement = req.body;
+  console.log({ userId: user.id, statement: statement.length });
+  pdf.create(statementTemplate(req.body, req.user), {}).toFile(`${user.email}.pdf`, (err) => {
+    if (err) {
+      // return Promise.reject(err);
+      return res.status(500).json({ message: "Error generating Statment PDF", data: null, error: err });
+    }
+    // return Promise.resolve();
+    return res.status(200).json({ message: "Wallet Statement PDF generated", data: req.body, error: null })
+  })
+}
+
+module.exports.getPrintedStatementPDF = async (req, res) => {
+  console.log(`${process.cwd()}/${req.user.email}.pdf`);
+  res.sendFile(`${process.cwd()}/${req.user.email}.pdf`);
+  // res.sendFile(`./../../${req.user.email}.pdf`);
 }

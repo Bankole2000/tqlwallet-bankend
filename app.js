@@ -43,6 +43,10 @@ app.get("/balance", async (req, res) => {
 
 app.get("/statement", requireUserAuth, checkUserVerification, txnController.getBankStatement)
 
+app.post('/print-statement', requireUserAuth, checkUserVerification, txnController.generateStatementPDF)
+
+app.get('/print-statement', requireUserAuth, checkUserVerification, txnController.getPrintedStatementPDF)
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`)
 })
