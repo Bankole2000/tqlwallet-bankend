@@ -56,7 +56,7 @@ module.exports.generateStatementPDF = async (req, res) => {
   const { user } = req;
   const statement = req.body;
   console.log({ userId: user.id, statement: statement.length });
-  pdf.create(statementTemplate(req.body, req.user), {}).toFile(`${user.email}.pdf`, (err) => {
+  pdf.create(statementTemplate(req.body, req.user), { format: 'A4', width: '8.26in', height: '11.69in', orientation: 'portrait' }).toFile(`${user.email}.pdf`, (err) => {
     if (err) {
       // return Promise.reject(err);
       return res.status(500).json({ message: "Error generating Statment PDF", data: null, error: err });
