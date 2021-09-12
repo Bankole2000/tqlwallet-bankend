@@ -26,6 +26,9 @@ module.exports = (statement, user) => {
     <title>${user.firstname} ${user.lastname}'s Account statement</title>
     
     <style>
+    html {
+      zoom: 0.7;
+    }
     .clearfix:after {
       content: "";
       display: table;
