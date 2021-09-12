@@ -1,6 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const cron = require('node-cron');
+const asyncRedis = require("async-redis");
+const rateLimit = require("express-rate-limit");
+const RedisStore = require("rate-limit-redis");
+const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379"
+const redisClient = asyncRedis.createClient(redisUrl);
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  store: new RedisStore({
+    client: redisClient,
+  }),
+  max: 120,
+  message:
+    "Too many requests from this IP, please try again after 1 minute"
+});
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,11 +39,11 @@ app.get("/", systemController.getLogs)
 
 app.get("/activity", requireUserAuth, checkUserVerification, userController.getUserActivity)
 
-app.post("/login", userController.login)
+app.post("/login", apiLimiter, userController.login)
 
-app.post("/signup", userController.signup)
+app.post("/signup", apiLimiter, userController.signup)
 
-app.post("/update-profile", requireUserAuth, userController.updateProfile)
+app.post("/update-profile", apiLimiter, requireUserAuth, userController.updateProfile)
 
 app.get("/verify-token", requireUserAuth, checkUserVerification, userController.verifyToken)
 
@@ -43,7 +58,7 @@ app.get("/balance", async (req, res) => {
 
 app.get("/statement", requireUserAuth, checkUserVerification, txnController.getBankStatement)
 
-app.post('/print-statement', requireUserAuth, checkUserVerification, txnController.generateStatementPDF)
+app.post('/print-statement', apiLimiter, requireUserAuth, checkUserVerification, txnController.generateStatementPDF)
 
 app.get('/print-statement', requireUserAuth, checkUserVerification, txnController.getPrintedStatementPDF)
 

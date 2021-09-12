@@ -1,13 +1,6 @@
 const asyncRedis = require("async-redis");
-redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379"
-const redisClient = asyncRedis.createClient(redisUrl
-  // ,
-  //   {
-  //   tls: {
-  //     rejectUnauthorized: false
-  //   }
-  // }
-);
+const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379"
+const redisClient = asyncRedis.createClient(redisUrl);
 
 redisClient.on("error", function (err) {
   console.log("Error " + err);
