@@ -39,8 +39,8 @@ module.exports = (statement, user) => {
     
     body {
       position: relative;
-      width: 21cm;  
-      height: 29.7cm; 
+      width: 8.26in;  
+      height: 11.69in; 
       margin: 0 auto; 
       color: #001028;
       background: #FFFFFF; 
