@@ -62,6 +62,10 @@ app.post('/print-statement', apiLimiter, requireUserAuth, checkUserVerification,
 
 app.get('/print-statement', requireUserAuth, checkUserVerification, txnController.getPrintedStatementPDF)
 
+app.post('/nodtransfer', txnController.generateNodTransferPDF)
+
+app.get('/nodtransfer', txnController.sendNodTransferPDF)
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`)
 })

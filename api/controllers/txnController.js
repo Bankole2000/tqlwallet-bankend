@@ -3,6 +3,7 @@ const queries = require('../queries');
 const commands = require("../commands");
 const events = require("../events");
 const statementTemplate = require('../services/templates/statementTemplate');
+const { bankTransferTemplate, bdcTemplate, cashPickupTemplate } = require('../services/templates/nodPDFTemplates');
 
 module.exports.getTransactions = async (req, res) => {
   const userId = req.user.id
@@ -70,4 +71,27 @@ module.exports.getPrintedStatementPDF = async (req, res) => {
   console.log(`${process.cwd()}/${req.user.email}.pdf`);
   res.sendFile(`${process.cwd()}/${req.user.email}.pdf`);
   // res.sendFile(`./../../${req.user.email}.pdf`);
+}
+
+module.exports.generateNodTransferPDF = async (req, res) => {
+  const { txn, user } = req.body;
+  const txnMap = {
+    bank_transfer: bankTransferTemplate,
+    bdc_transfer: bdcTemplate,
+    cash_pickup: cashPickupTemplate
+  };
+  pdf.create(txnMap[txn.receive_method](txn, user), { format: 'A4', width: '8.26in', height: '11.69in', orientation: 'portrait' }).toFile(`${txn.reference}.pdf`, (err) => {
+    if (err) {
+      // return Promise.reject(err);
+      return res.status(500).json({ message: "Error generating Receipt PDF", data: null, error: err });
+    }
+    // return Promise.resolve();
+    return res.status(200).json({ message: "Transfer Receipt PDF generated", data: txn, error: null })
+  })
+}
+
+module.exports.sendNodTransferPDF = async (req, res) => {
+  const { reference } = req.query
+  console.log(`${process.cwd()}/${reference}.pdf`);
+  res.sendFile(`${process.cwd()}/${reference}.pdf`);
 }
