@@ -139,7 +139,7 @@ const bdcTemplate = (txn, user) => {
   </head>
   <body>
     <header class="clearfix">
-      <div id="logo">
+      <div id="logo" style="display: none;">
         <img  src="http://nodtransfer.com:8888/img/nodtransfer-logo.f717c691.svg">
       </div>
       <h1 class="logo">TINKERING BDC</h1>
@@ -167,12 +167,12 @@ const bdcTemplate = (txn, user) => {
           <tr>
             <td class="service">Status</td>
             
-            <td class="total">PAYOUT SUCCEEDED</td>
+            <td class="total">${txn.status.toUpperCase()}</td>
           </tr>
           <tr>
             <td class="service">Payment Amount</td>
             
-            <td class="total">${txn.recipient_amount.formatted}</td>
+            <td class="total">${txn.sender_amount.formatted} </td>
           </tr>
           <tr>
             <td class="service">FEE</td>
@@ -182,22 +182,21 @@ const bdcTemplate = (txn, user) => {
           <tr>
             <td class="service">Total Payment Amount</td>
             
-            <td class="total">${txn.recipient_amount.formatted}</td>
+            <td class="total">${txn.amount.formatted}</td>
           </tr>
           <tr>
             <td class="service">Payout Amount</td>
            
-            <td class="total">${txn.sender_amount.formatted}</td>
+            <td class="total">${txn.recipient_amount.formatted}</td>
           </tr>
           <tr>
             <td class="service">Exchange Rate</td>
-            
-            <td class="total">1 ${txn.currency_code} = ${txn.exchange_rate} ${txn.recipient_currency_code}</td>
+            <td class="total">1 ${txn.currency_code} = ${txn.exchange_rate} ${txn.recipient_amount.currency_code}</td>
           </tr>
           <tr>
             <td class="service">Payment Method</td>
             
-            <td class="total">${txn.payment_method}</td>
+            <td class="total">${txn.payment_method.toUpperCase()}</td>
           </tr>
           <tr>
             <td class="service">Payout Method</td>
