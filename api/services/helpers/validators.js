@@ -3,18 +3,10 @@ const alphaNumRegex = /^[a-z0-9]+$/i;
 const userNameRegex = /^[a-z0-9_]+$/i;
 const validStringRegex = /([^\s])/;
 
-module.exports.isEmail = (emailLike) => {
-  return emailLike ? emailRegex.test(emailLike) : false;
-};
+module.exports.isEmail = (emailLike) => (emailLike ? emailRegex.test(emailLike) : false);
 
-module.exports.isAlphaNumeric = (alphaNumLike) => {
-  return alphaNumLike ? alphaNumRegex.test(alphaNumLike) : false;
-};
+module.exports.isAlphaNumeric = (alphaNumLike) => (alphaNumLike ? alphaNumRegex.test(alphaNumLike) : false);
 
-module.exports.isValidUsername = (usernameLike) => {
-  return usernameLike ? userNameRegex.test(usernameLike) : false;
-};
+module.exports.isValidUsername = (usernameLike) => (usernameLike ? userNameRegex.test(usernameLike) : false);
 
-module.exports.isNotEmpty = (stringLike) => {
-  return validStringRegex.test(stringLike);
-};
+module.exports.isNotEmpty = (stringLike) => validStringRegex.test(stringLike);
