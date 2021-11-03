@@ -4,7 +4,7 @@
   "description": "\"Group projec for TalentQL program\"",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no tests specified\" && exit 0",
+    "test": "jest --coverage",
     "lint": "eslint ./ --fix",
     "start": "node app.js",
     "dev": "nodemon app.js"
