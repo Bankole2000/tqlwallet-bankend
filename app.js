@@ -1,10 +1,11 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 const cron = require('node-cron');
-const asyncRedis = require("async-redis");
-const rateLimit = require("express-rate-limit");
-const RedisStore = require("rate-limit-redis");
-const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379"
+const asyncRedis = require('async-redis');
+const rateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
+
+const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const redisClient = asyncRedis.createClient(redisUrl);
 
 const apiLimiter = rateLimit({
@@ -14,58 +15,58 @@ const apiLimiter = rateLimit({
   }),
   max: 120,
   message:
-    "Too many requests from this IP, please try again after 1 minute"
+    'Too many requests from this IP, please try again after 1 minute',
 });
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "*",
+    origin: '*',
     credentials: true,
-  })
+  }),
 );
 
-const { systemController, txnController, userController } = require("./api/controllers");
+const { systemController, txnController, userController } = require('./api/controllers');
 const { requireUserAuth, checkUserVerification } = require('./api/middleware/auth');
 
 // Daily backup of event logs older than 1 week
-cron.schedule('59 59 23 * * *', systemController.archiveEvents)
+cron.schedule('59 59 23 * * *', systemController.archiveEvents);
 
-app.get("/", systemController.getLogs)
+app.get('/', systemController.getLogs);
 
-app.get("/activity", requireUserAuth, checkUserVerification, userController.getUserActivity)
+app.get('/activity', requireUserAuth, checkUserVerification, userController.getUserActivity);
 
-app.post("/login", apiLimiter, userController.login)
+app.post('/login', apiLimiter, userController.login);
 
-app.post("/signup", apiLimiter, userController.signup)
+app.post('/signup', apiLimiter, userController.signup);
 
-app.post("/update-profile", apiLimiter, requireUserAuth, userController.updateProfile)
+app.post('/update-profile', apiLimiter, requireUserAuth, userController.updateProfile);
 
-app.get("/verify-token", requireUserAuth, checkUserVerification, userController.verifyToken)
+app.get('/verify-token', requireUserAuth, checkUserVerification, userController.verifyToken);
 
-app.post("/transactions", requireUserAuth, checkUserVerification, txnController.createTransaction)
+app.post('/transactions', requireUserAuth, checkUserVerification, txnController.createTransaction);
 
-app.get("/transactions", requireUserAuth, checkUserVerification, txnController.getTransactions)
+app.get('/transactions', requireUserAuth, checkUserVerification, txnController.getTransactions);
 
-app.get("/balance", async (req, res) => {
+app.get('/balance', async (req, res) => {
   // WIP - Should return aggregate
-  res.json({ message: "Get User Balance" })
-})
+  res.json({ message: 'Get User Balance' });
+});
 
-app.get("/statement", requireUserAuth, checkUserVerification, txnController.getBankStatement)
+app.get('/statement', requireUserAuth, checkUserVerification, txnController.getBankStatement);
 
-app.post('/print-statement', apiLimiter, requireUserAuth, checkUserVerification, txnController.generateStatementPDF)
+app.post('/print-statement', apiLimiter, requireUserAuth, checkUserVerification, txnController.generateStatementPDF);
 
-app.get('/print-statement', requireUserAuth, checkUserVerification, txnController.getPrintedStatementPDF)
+app.get('/print-statement', requireUserAuth, checkUserVerification, txnController.getPrintedStatementPDF);
 
-app.post('/nodtransfer', txnController.generateNodTransferPDF)
+app.post('/nodtransfer', txnController.generateNodTransferPDF);
 
-app.get('/nodtransfer', txnController.sendNodTransferPDF)
+app.get('/nodtransfer', txnController.sendNodTransferPDF);
 
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`)
-})
+  console.log(`App listening at http://localhost:${port}`);
+});

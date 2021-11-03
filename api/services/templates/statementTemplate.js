@@ -1,7 +1,8 @@
 module.exports = (statement, user) => {
-  let totalCredit = 0, totalDebit = 0;
-  let statementHtml = ``;
-  statement.forEach(txn => {
+  let totalCredit = 0; let
+    totalDebit = 0;
+  let statementHtml = '';
+  statement.forEach((txn) => {
     statementHtml += `
     <tr>
           <td class="service ${txn.type.toLowerCase()}">${txn.type.toUpperCase()}</td>
@@ -10,7 +11,7 @@ module.exports = (statement, user) => {
           
           <td class="total">${txn.createdAt}</td>
         </tr>
-    `
+    `;
     if (txn.type.toLowerCase() === 'credit') {
       totalCredit += txn.amount;
     } else {
@@ -234,5 +235,5 @@ module.exports = (statement, user) => {
     </footer>
   </body>
 </html>
-  `
-}
+  `;
+};

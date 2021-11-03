@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 
 class AppEvent {
-  constructor(model = "",
-    id = "",
+  constructor(model = '',
+    id = '',
     type,
     name,
     data = {}, ip = null, error = null) {
@@ -18,4 +18,4 @@ class AppEvent {
   }
 }
 
-module.exports = AppEvent
+module.exports = AppEvent;

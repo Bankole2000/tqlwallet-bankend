@@ -1,33 +1,32 @@
+const { PrismaClient } = require('@prisma/client');
 
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const txnCommands = {
   async createTxn(data) {
     try {
-      return await prisma.$transaction(async (prisma) => {
-        const actor = await prisma.user.update({
+      return await prisma.$transaction(async (prismaInstance) => {
+        const actor = await prismaInstance.user.update({
           data: {
             balance: {
-              increment: data.amount
+              increment: data.amount,
             },
           },
           where: {
-            id: data.actorUuid
-          }
+            id: data.actorUuid,
+          },
         });
         if (actor && actor.balance < 0) {
-          throw new Error("Insufficient Balance")
+          throw new Error('Insufficient Balance');
         }
-        const newTxn = await prisma.transaction.create({ data })
-        return { data: newTxn, error: null }
-      })
+        const newTxn = await prismaInstance.transaction.create({ data });
+        return { data: newTxn, error: null };
+      });
     } catch (e) {
       console.log({ e });
-      return { data, error: "Insufficient Balance" };
+      return { data, error: 'Insufficient Balance' };
     }
   },
-}
+};
 
-module.exports = txnCommands
+module.exports = txnCommands;

@@ -5,5 +5,5 @@ const userController = require('./userController');
 module.exports = {
   systemController,
   txnController,
-  userController
-}
+  userController,
+};

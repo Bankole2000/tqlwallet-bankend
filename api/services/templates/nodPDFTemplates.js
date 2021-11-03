@@ -1,6 +1,4 @@
-const bdcTemplate = (txn, user) => {
-
-  return `
+const bdcTemplate = (txn, user) => `
   <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -205,20 +203,18 @@ const bdcTemplate = (txn, user) => {
           </tr>
           <tr>
             <td class="service">Customer Name</td>
-            
             <td class="total">${txn.recipient_name.toUpperCase()}</td>
           </tr>
           <tr>
             <td class="service">Exchange Reference</td>
-           
             <td class="total">${txn.reference}</td>
           </tr>
           
           <tr>
             <td colspan="2" class="grand total">
+              <p style="display: none;">${user.name}</p>
               <p style="text-align:center;">Thank you for using NodTransfer</p>
             </td>
-            
           </tr>
         </tbody>
       </table>
@@ -235,11 +231,9 @@ const bdcTemplate = (txn, user) => {
     </footer>
   </body>
 </html>
-  `
-}
+  `;
 
-const cashPickupTemplate = (txn, user) => {
-  return `
+const cashPickupTemplate = (txn, user) => `
   <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -436,7 +430,7 @@ const cashPickupTemplate = (txn, user) => {
           </tr>
           <tr>
             <td class="service">Exchange Rate</td>
-            <td class="total">1 {txn.currency_code} = ${txn.exchange_rate} ${txn.recipient_currency_code}</td>
+            <td class="total">1 ${txn.currency_code} = ${txn.exchange_rate} ${txn.recipient_currency_code}</td>
           </tr>
           <tr>
             <td class="service">Payout Amount</td>
@@ -444,7 +438,7 @@ const cashPickupTemplate = (txn, user) => {
           </tr>
           <tr>
             <td class="service">Payment Method</td>
-            <td class="total">${txn.payment_method}</td>
+            <td class="total">${txn.payment_method.toUpperCase()}</td>
           </tr>
           
           <tr>
@@ -479,11 +473,9 @@ const cashPickupTemplate = (txn, user) => {
     </footer>
   </body>
 </html>
-  `
-}
+  `;
 
-const bankTransferTemplate = (txn, user) => {
-  return `
+const bankTransferTemplate = (txn, user) => `
   <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -730,7 +722,6 @@ const bankTransferTemplate = (txn, user) => {
     </footer>
   </body>
 </html>
-  `
-}
+  `;
 
-module.exports = { bdcTemplate, cashPickupTemplate, bankTransferTemplate }
+module.exports = { bdcTemplate, cashPickupTemplate, bankTransferTemplate };
