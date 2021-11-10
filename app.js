@@ -54,6 +54,7 @@ app.get('/transactions', requireUserAuth, checkUserVerification, txnController.g
 
 app.get('/balance', async (req, res) => {
   // WIP - Should return aggregate
+  console.log({ test: 'Minor change' });
   res.json({ message: 'Get User Balance' });
 });
 
