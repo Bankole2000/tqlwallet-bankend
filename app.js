@@ -4,6 +4,7 @@ const cron = require('node-cron');
 const asyncRedis = require('async-redis');
 const rateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
+const unReferencedVariable = 1;
 
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const redisClient = asyncRedis.createClient(redisUrl);
