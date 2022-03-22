@@ -32,6 +32,7 @@ app.use(
 
 const { systemController, txnController, userController } = require('./api/controllers');
 const { requireUserAuth, checkUserVerification } = require('./api/middleware/auth');
+const { addEmailToWaitlist, getNodbankWaitlist, deleteFromNodbankWaitlist } = require('./api/controllers/waitlist.controller');
 
 // Daily backup of event logs older than 1 week
 cron.schedule('59 59 23 * * *', systemController.archiveEvents);
@@ -57,6 +58,12 @@ app.get('/balance', async (req, res) => {
   console.log({ test: 'Minor change' });
   res.json({ message: 'Get User Balance' });
 });
+
+app.get('/nodbank-waitlist', getNodbankWaitlist);
+
+app.post('/nodbank-waitlist', addEmailToWaitlist);
+
+app.delete('/nodbank-waitlist/:id', deleteFromNodbankWaitlist);
 
 app.get('/statement', requireUserAuth, checkUserVerification, txnController.getBankStatement);
 

@@ -54,6 +54,12 @@ model Event {
   timestamp DateTime
 }
 
+model NodbankWaitlist {
+  id        String   @unique @default(uuid()) @db.Uuid
+  email     String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+}
+
 // model AppEvent {
 //   id        Int      @id @default(autoincrement())
 //   model     String   @db.VarChar(255)
